@@ -4,11 +4,15 @@ import type { InternshipVisual } from './InternshipVisuals'
 
 export type Figure = { src: string; alt: string; caption: string; sourcePage: number; width: number; height: number }
 export type Evidence = { title: string; description: string }
-export type CaseStory = { situation: string; task: string; actions: { title: string; body: string }[]; result: string; takeaway: string }
+export type CaseStory = { situation: string; task: string; actions: { title: string; body?: string; points?: string[] }[]; result: string; takeaway: string }
 export type CaseImage = { src: string; alt: string; caption: string; kind: '交互设计' | 'UI界面' | '产品界面' | '流程设计'; width: number; height: number }
-export type Prototype = { src: string; title: string; description: string; format: 'desktop' | 'mobile' }
-export type Chapter = { title: string; english: string; paragraphs: string[]; pages: number[]; group?: string; nativeVisual?: NativeVisual; internshipVisual?: InternshipVisual; figures?: Figure[]; blocks?: { label: string; body: string }[]; evidence?: Evidence[]; evidenceNote?: string; story?: CaseStory; gallery?: CaseImage[]; prototype?: Prototype }
-export type Entry = { id: string; number: string; title: string; type: string; description: string; color: string; mark: string; kind: 'internship' | 'project' | 'photography' | 'personal'; date?: string; role?: string; cover?: string; sourceNote?: string; chapters?: Chapter[] }
+// `frame` is the prototype's own designed size; the viewport uses it verbatim so the
+// embedded page is never squeezed out of its intended proportions.
+export type Prototype = { src: string; title: string; description: string; format: 'desktop' | 'mobile'; frame?: { width: number; height: number } }
+// A journey map is a table: the stops run along the top, each lane reads across them.
+export type Journey = { window: string; note: string; stages: { stage: string; moment: string }[]; lanes: { label: string; english: string; cells: string[] }[]; actors: string[]; summary: string }
+export type Chapter = { title: string; english: string; paragraphs: string[]; pages: number[]; group?: string; nativeVisual?: NativeVisual; internshipVisual?: InternshipVisual; figures?: Figure[]; blocks?: { label: string; body: string }[]; evidence?: Evidence[]; evidenceNote?: string; story?: CaseStory; gallery?: CaseImage[]; prototype?: Prototype; note?: string; journey?: Journey }
+export type Entry = { id: string; number: string; title: string; type: string; description: string; color: string; mark: string; kind: 'internship' | 'project' | 'photography' | 'personal'; date?: string; role?: string; cover?: string; sourceNote?: string; chapters?: Chapter[]; prototype?: Prototype }
 
 // Draft case-study copy based on the owner's resume and original portfolio. Image crops cite their source pages; unverified effects remain design intentions.
 export const internships: Entry[] = [
@@ -91,8 +95,105 @@ export const internships: Entry[] = [
 
 export const projects: Entry[] = [
   {
-    "id": "earlybird",
+    "id": "coffee",
     "number": "01",
+    "title": "日常咖啡",
+    "type": "产品设计 / 移动端 / 内容体系",
+    "description": "把“喝到的一杯”和“自己冲的一杯”放进同一本手记，让记录可以回看、可以比较，也可以接着往下试。",
+    "color": "#c69a6a",
+    "mark": "DAILY COFFEE",
+    "kind": "project",
+    "date": "2026.11",
+    "role": "个人项目｜产品定义、内容体系、界面设计与前端实现",
+    "chapters": [
+      {
+        "title": "项目背景",
+        "english": "Context",
+        "paragraphs": [
+          "项目从一个很小的空缺开始：咖啡越来越容易买到，但喝过的那一杯几乎不会留下痕迹。照片进了相册，参数记在便签上，下次想复现时找不到，也说不清这次和上次差在哪里。",
+          "现有工具大多停在两端。一端是点单、优惠与探店，解决“去哪儿喝”；另一端是面向从业者的参数管理，术语和门槛都偏高。介于两者之间的人——每天喝、偶尔自己冲、想把拉花练稳一点——缺一个顺手的落点。",
+          "所以这个项目不做点单，也不做社区，而是做一本手记：先把一杯记下来，再让这些记录自己长成可查的依据。"
+        ],
+        "pages": []
+      },
+      {
+        "title": "目标人群",
+        "english": "Who it is for",
+        "paragraphs": [
+          "三类使用者的差别不在懂多少咖啡，而在想留下什么。按“想留下什么”分层，功能优先级也就排出来了。"
+        ],
+        "pages": [],
+        "blocks": [
+          { "label": "日常饮用者 · 想留住一杯的印象", "body": "每天都喝，但说不出今天和昨天的区别。需要门槛极低的记录：拍一张、挑一个风味词、写一句就能存下，其余字段都可以空着。" },
+          { "label": "家庭冲煮者 · 想复现一杯的味道", "body": "在家手冲或做意式，参数全靠记忆。需要豆子、粉水比、水温、时间成组保存，并且习惯一次只改一个变量，下一杯才有参照。" },
+          { "label": "拉花练习者 · 想看见自己的变化", "body": "练过很多次，照片散在相册里。需要把每次的图案留成可比较的档案，并为下一次留一个具体的小目标。" }
+        ],
+        "note": "人群划分是设计阶段的假设，用于排功能优先级，尚未经过规模化验证。"
+      },
+      {
+        "title": "产品定位",
+        "english": "Positioning",
+        "paragraphs": [
+          "一句话：先记下来，再慢慢懂。日常咖啡是一本给自己看的咖啡手记，由记录、拉花练习室和知识库三部分组成，不承担点单，也不承担社交。",
+          "定位靠三条取舍守住，功能取舍一旦含糊，手记就会退化成又一个相册或又一个论坛。"
+        ],
+        "pages": [],
+        "blocks": [
+          { "label": "记录优先于分享", "body": "记录、浏览行为与收藏都存在本机，没有关注关系和公开时间线。先让人愿意写，而不是先让人被看见。" },
+          { "label": "描述优先于打分", "body": "风味引导先给具体的词和观察，再谈好不好喝；知识库 24 篇都把“该记下什么”放在结论前面，并附一个当天就能做的小练习。" },
+          { "label": "可复用优先于完整", "body": "一条记录可以只有一张图和一句话，也可以补齐豆子、粉水比、水温与时间，成为下次照着来的配方卡。练习室里的案例能一键变成新的记录，带着下一次的目标。" }
+        ],
+        "note": "知识内容标注了外部来源（NCA、World Coffee Research、HARIO、AeroPress 等）；拉花练习的四项评分是为本作品集撰写的视觉估计，不是模型输出或赛事评审。"
+      },
+      {
+        "title": "用户旅程图",
+        "english": "User journey",
+        "paragraphs": [
+          "把一杯咖啡的前后拆成六个停顿，再看每个停顿上用户在做什么、在想什么，以及产品该接住哪一下。中间两处最容易断：想记却嫌麻烦，记了却不知道写什么。",
+          "这两处决定了结构：首页给一个直接开始的入口，记录按四种类型预置字段，风味与参数都给候选项。"
+        ],
+        "pages": [],
+        "journey": {
+          "window": "USER JOURNEY / 一杯咖啡的前后",
+          "note": "从喝到一杯，到愿意再试一次",
+          "stages": [
+            { "stage": "喝到", "moment": "店里或家里的一杯" },
+            { "stage": "想记", "moment": "顺手拍了，还没写" },
+            { "stage": "记录", "moment": "选类型，填几项" },
+            { "stage": "回看", "moment": "翻自己的手记" },
+            { "stage": "学习", "moment": "遇到说不清的地方" },
+            { "stage": "再试", "moment": "改一个变量再冲" }
+          ],
+          "lanes": [
+            {
+              "label": "行为", "english": "DOING",
+              "cells": ["点一杯，或自己冲一杯，顺手拍一张照片。", "想留下来，又要在相册和备忘录之间来回。", "挑记录类型，填风味、方法与参数。", "按类型和标签翻看，找最想复现的那一杯。", "带着具体问题查豆子、参数或器具。", "照着上一条记录调整，再记一次。"]
+            },
+            {
+              "label": "想法与感受", "english": "FEELING",
+              "cells": ["好喝，但说不清为什么。", "写起来麻烦，先放着吧。", "不确定用词对不对，也怕填不全。", "想知道哪一杯最好，却只剩照片。", "术语太多，担心记错。", "想看见自己真的有变化。"]
+            },
+            {
+              "label": "产品承接", "english": "SUPPORT",
+              "cells": ["首页直接给“＋ 记录一杯咖啡”，不先要求登录或分类。", "四种记录类型（喝到一杯 / 自己冲煮 / 拉花练习 / 特调灵感）各自预置字段。", "风味词与冲煮参数都给候选项，允许只填一部分就保存。", "手记按类型与标签成组，保留照片、风味与原始参数。", "知识库分豆子与产地、冲煮参数、冲煮方法、器具、风味、奶咖六册，每篇标注来源。", "练习室的案例可一键加回手记，并带上下一次的练习目标。"]
+            }
+          ],
+          "actors": ["日常饮用者", "家庭冲煮者", "拉花练习者"],
+          "summary": "一条可以回看的记录链"
+        }
+      }
+    ],
+    "prototype": {
+      "src": "https://yuanzongyi22-zoey.github.io/coffee-dairy/",
+      "title": "日常咖啡 · 可交互原型",
+      "description": "完整的移动端原型：记录一杯咖啡、翻看手记、进拉花练习室、读知识库，都可以直接点开试一试。数据存在你自己的浏览器里。",
+      "format": "mobile",
+      "frame": { "width": 480, "height": 892 }
+    }
+  },
+  {
+    "id": "earlybird",
+    "number": "02",
     "title": "早早鸟",
     "type": "产品设计 / UI / 服务设计",
     "description": "围绕大学生早餐中的时间、选择与反馈问题，设计早餐预约小程序、智能无人餐车及配套服务。",
@@ -172,11 +273,18 @@ export const projects: Entry[] = [
         ]
       }
     ],
-    "sourceNote": "项目时间：纸质作品集记录2024.04—2024.06，简历记录2024.02—2024.07，后续统一。"
+    "sourceNote": "项目时间：纸质作品集记录2024.04—2024.06，简历记录2024.02—2024.07，后续统一。",
+    "prototype": {
+      "src": "https://yuanzongyi22-zoey.github.io/early-bird/",
+      "title": "早早鸟 · 可交互小程序原型",
+      "description": "按作品集界面稿搭建的小程序原型：早餐预约、取餐码、组队打卡与评价都可以直接点开试一试。",
+      "format": "mobile",
+      "frame": { "width": 440, "height": 884 }
+    }
   },
   {
     "id": "eimusic",
-    "number": "02",
+    "number": "03",
     "title": "Ei Music",
     "type": "产品设计 / UI 设计",
     "description": "把日常采样、模块化创作与音乐分享连接起来，让不熟悉专业软件的音乐爱好者也能尝试表达。",
@@ -259,7 +367,7 @@ export const projects: Entry[] = [
   },
   {
     "id": "oldtravel",
-    "number": "03",
+    "number": "04",
     "title": "老友行",
     "type": "产品设计 / 旅行安全",
     "description": "从老年游客与导游的双重需求出发，设计老人端、导游端与急救端，连接讲解、联络和出行支持。",
@@ -334,7 +442,7 @@ export const projects: Entry[] = [
   },
   {
     "id": "noselover",
-    "number": "04",
+    "number": "05",
     "title": "NOSE Lover",
     "type": "产品设计 / 儿童洗鼻器",
     "description": "围绕儿童与家长的使用感受，探索洗鼻器的握持、操作、外观和清洁收纳，形成负压式产品设计概念。",

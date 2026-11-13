@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import type { CaseImage, Chapter, Prototype } from './portfolio-content'
 import { InternshipRecord } from './InternshipVisuals'
 
@@ -42,9 +42,25 @@ export function EmbeddedPrototype({ prototype }: { prototype: Prototype }) {
   }
   return <div ref={container} className={`prototype-embed ${fullscreen ? 'prototype-expanded' : ''}`} onKeyDown={event => { if (event.key === 'Escape') setFullscreen(false) }}>
     <div className="prototype-toolbar"><span><i aria-hidden="true" />可交互原型 <small>LIVE PROTOTYPE</small></span><button onClick={toggleFullscreen}>{nativeFullscreen ? '退出全屏' : fullscreen ? '收起' : '放大体验'} ⤢</button></div>
-    <div className={`prototype-viewport prototype-${prototype.format}`}><iframe src={prototype.src} title={prototype.title} loading="lazy" allow="fullscreen; clipboard-write" referrerPolicy="no-referrer" onError={() => setUnavailable(true)} />{unavailable && <p className="prototype-error">原型暂时无法载入，请稍后刷新页面。</p>}</div>
+    <div className={`prototype-viewport prototype-${prototype.format}`} style={prototype.frame ? { '--prototype-frame-width': `${prototype.frame.width}px`, '--prototype-frame-height': `${prototype.frame.height}px` } as React.CSSProperties : undefined}><iframe src={prototype.src} title={prototype.title} loading="lazy" allow="fullscreen; clipboard-write" referrerPolicy="no-referrer" onError={() => setUnavailable(true)} />{unavailable && <p className="prototype-error">原型暂时无法载入，请稍后刷新页面。</p>}</div>
     <p className="prototype-caption">{prototype.description}</p>
   </div>
+}
+
+// Figures carry the weight of these cases, so they are set bolder and larger than the prose around them.
+const statPattern = /(?<![A-Za-z\d])([+\-]?\d[\d,]*(?:\.\d+)?)\s*(%|PP|个|家|条|项|份|倍|次|人)?(?![A-Za-z])/g
+
+function withStats(text: string) {
+  const parts: ReactNode[] = []
+  let last = 0
+  for (const match of text.matchAll(statPattern)) {
+    const start = match.index ?? 0
+    if (start > last) parts.push(text.slice(last, start))
+    parts.push(<b className="case-stat" key={start}>{match[0]}</b>)
+    last = start + match[0].length
+  }
+  if (last < text.length) parts.push(text.slice(last))
+  return parts
 }
 
 export function InternshipCase({ chapter, onExpand }: { chapter: Chapter; onExpand: (image: { src: string; label: string }) => void }) {
@@ -53,16 +69,18 @@ export function InternshipCase({ chapter, onExpand }: { chapter: Chapter; onExpa
   const visuals = !!chapter.internshipVisual || !!chapter.gallery?.length
   return <div className="start-case">
     <div className="start-context">
-      <div><p className="start-label"><b>S</b> 背景 <small>SITUATION</small></p><p>{story.situation}</p></div>
-      <div><p className="start-label"><b>T</b> 目标 <small>TASK</small></p><p>{story.task}</p></div>
+      <div><p className="start-label"><b>S</b> 背景 <small>SITUATION</small></p><p>{withStats(story.situation)}</p></div>
+      <div><p className="start-label"><b>T</b> 目标 <small>TASK</small></p><p>{withStats(story.task)}</p></div>
     </div>
     <div className={`start-execution ${visuals ? 'with-design' : ''}`}>
-      <div className="start-actions"><p className="start-label"><b>A</b> 我的行动 <small>ACTION</small></p><ol>{story.actions.map((action, i) => <li key={action.title}><span>{String(i + 1).padStart(2, '0')}</span><div><h3>{action.title}</h3><p>{action.body}</p></div></li>)}</ol></div>
+      <div className="start-actions"><p className="start-label"><b>A</b> 我的行动 <small>ACTION</small></p><ol>{story.actions.map((action, i) => <li key={action.title}><span>{String(i + 1).padStart(2, '0')}</span><div><h3>{action.title}</h3>{action.points?.length
+        ? <ul className="action-points">{action.points.map(point => <li key={point}>{withStats(point)}</li>)}</ul>
+        : action.body && <p>{withStats(action.body)}</p>}</div></li>)}</ol></div>
       {visuals && <div className="start-design">{chapter.gallery?.length ? <CaseGallery images={chapter.gallery} onExpand={onExpand} /> : chapter.internshipVisual && <InternshipRecord type={chapter.internshipVisual} />}</div>}
     </div>
     {chapter.gallery?.length && chapter.internshipVisual && <div className="start-supplement"><InternshipRecord type={chapter.internshipVisual} /></div>}
     <div className="start-outcomes">
-      <div><p className="start-label"><b>R</b> 结果 <small>RESULT</small></p><p>{story.result}</p></div>
+      <div><p className="start-label"><b>R</b> 结果 <small>RESULT</small></p><p>{withStats(story.result)}</p></div>
       <div><p className="start-label"><b>T</b> 思考 <small>TAKEAWAY</small></p><p>{story.takeaway}</p></div>
     </div>
     {chapter.prototype && <EmbeddedPrototype prototype={chapter.prototype} />}

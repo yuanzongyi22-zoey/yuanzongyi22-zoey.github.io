@@ -1,0 +1,16 @@
+Planet textures: Solar System Scope
+Source: https://www.solarsystemscope.com/textures/
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+Source maps:
+https://www.solarsystemscope.com/textures/download/2k_moon.jpg
+https://www.solarsystemscope.com/textures/download/2k_venus_atmosphere.jpg
+https://www.solarsystemscope.com/textures/download/2k_jupiter.jpg
+https://www.solarsystemscope.com/textures/download/2k_saturn.jpg
+https://www.solarsystemscope.com/textures/download/2k_uranus.jpg
+
+Modifications for this portfolio:
+Surface maps projected onto spheres, lit from the upper left, and exported
+as 512 x 512 transparent WebP images. Saturn's rings are drawn separately
+in CSS. These are illustrative renders, not unmodified telescope images.

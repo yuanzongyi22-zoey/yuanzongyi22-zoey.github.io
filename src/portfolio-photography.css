@@ -1,0 +1,256 @@
+/* The imaging section reads as printed matter: a pale paper page, one plate per
+   spread for portraits, and a single continuous column for landscapes. English is
+   set small and tracked out so it decorates the Chinese rather than competing.
+   The pages are deliberately under-filled — the air around a photo is part of the
+   layout, not room left over. */
+.photo-spread {
+  background: #f4f1ea;
+  color: #23201c;
+  /* Cancels the padding .project-detail.kind-photography sets, so the paper still
+     runs to both edges of the window now that the left outline is gone. */
+  margin-inline: calc(-1 * clamp(24px, 6vw, 120px));
+  padding: clamp(72px, 9vh, 116px) clamp(30px, 8vw, 170px) clamp(78px, 10vh, 124px);
+}
+.photo-intro { max-width: 1280px; margin: 0 auto clamp(64px, 9vh, 104px); }
+.photo-intro .section-index { color: #8a8073; margin: 0 0 14px; }
+.photo-intro h2 { margin: 0; color: #1d1a17; }
+.photo-intro > p:last-child { margin: 14px 0 0; font-size: 14px; line-height: 1.95; color: #5d564c; max-width: 560px; }
+
+.photo-chapter { max-width: 1280px; margin: auto; padding-top: 46px; scroll-margin-top: 90px; }
+.photo-chapter + .photo-chapter { margin-top: clamp(80px, 12vh, 140px); border-top: 1px solid #ddd5c7; padding-top: clamp(64px, 9vh, 96px); }
+.photo-chapter-head { display: grid; gap: 7px; margin-bottom: clamp(36px, 5vh, 60px); }
+.photo-chapter-head .section-index { color: #8a8073; margin: 0; }
+.photo-chapter-head h3 { margin: 0; color: #1d1a17; }
+.photo-chapter-head .editorial-english { margin: 0; color: #8d8375; }
+.photo-chapter-note { margin: 8px 0 0; font-size: 12px; line-height: 1.9; color: #6a6358; max-width: 520px; }
+
+/* Portraits — a horizontal track of spreads, paged by native scroll snapping. */
+.folio-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.folio-track::-webkit-scrollbar { display: none; }
+.folio-track:focus-visible { outline: 1px solid #b0a18a; outline-offset: 6px; }
+.folio-page {
+  position: relative;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(26px, 5vh, 52px);
+  min-height: clamp(560px, 80vh, 840px);
+  padding: 0 clamp(4px, 3vw, 58px);
+}
+.page-rule {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid #cdc5b8;
+  font: 9px 'DM Mono', monospace;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #6a6258;
+}
+.page-rule-mark { font-size: 7px; color: #a2957f; }
+
+/* Every plate is laid out on the same 12 × 12 field. A photo is placed in a box on
+   that field and shown whole inside it (`contain`), so three things happen at once:
+   nothing is cropped, each frame keeps its own size and shape, and the rows and
+   columns no box reaches are the breathing space. */
+.page-plate {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  gap: clamp(16px, 2vw, 34px);
+  min-height: 0;
+}
+.page-plate figure { position: relative; margin: 0; min-width: 0; min-height: 0; }
+.page-plate button { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: transparent; cursor: zoom-in; }
+.page-plate button:focus-visible { outline: 2px solid #8a7a5c; outline-offset: 6px; }
+.page-plate img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+/* One frame to a page: it sits in the middle of the field with wide margins. */
+.plate-solo { grid-template-columns: 1fr; grid-template-rows: 1fr; padding: 0 clamp(0px, 9vw, 150px); }
+/* Two frames fall on a diagonal: the top-right and bottom-left corners stay empty. */
+.plate-duo figure:nth-child(1) { grid-area: 1 / 1 / 11 / 7; }
+.plate-duo figure:nth-child(2) { grid-area: 6 / 8 / 13 / 13; }
+/* Three: a tall opening frame, a smaller one dropped lower on the right, and a
+   third tucked under the first — no two share a baseline. */
+.plate-trio figure:nth-child(1) { grid-area: 1 / 1 / 8 / 7; }
+.plate-trio figure:nth-child(2) { grid-area: 3 / 8 / 11 / 13; }
+.plate-trio figure:nth-child(3) { grid-area: 9 / 2 / 13 / 8; }
+/* Four: two large frames on the diagonal, two small ones offset from them. */
+.plate-quad figure:nth-child(1) { grid-area: 1 / 1 / 8 / 6; }
+.plate-quad figure:nth-child(2) { grid-area: 2 / 7 / 6 / 12; }
+.plate-quad figure:nth-child(3) { grid-area: 9 / 2 / 13 / 7; }
+.plate-quad figure:nth-child(4) { grid-area: 7 / 7 / 13 / 13; }
+
+.page-side {
+  position: absolute;
+  right: -6px;
+  top: 46%;
+  writing-mode: vertical-rl;
+  font: italic 11px 'Playfair Display', serif;
+  letter-spacing: .14em;
+  color: #a89a84;
+  pointer-events: none;
+}
+.page-foot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: end;
+  gap: clamp(18px, 3vw, 44px);
+  padding-top: 15px;
+  border-top: 1px solid #cdc5b8;
+}
+.page-title h3 { margin: 0; color: #1d1a17; }
+.page-title .editorial-english { margin: 4px 0 0; color: #8d8375; font-size: 13px; }
+.page-note { margin: 9px 0 0; font-size: 11px; line-height: 1.85; color: #6a6358; max-width: 420px; }
+.page-meta { display: flex; gap: clamp(14px, 2vw, 30px); margin: 0; }
+.page-meta dt { font: 7px 'DM Mono', monospace; letter-spacing: .14em; color: #9b9080; margin-bottom: 6px; }
+.page-meta dd { margin: 0; font-size: 11px; color: #4b453d; }
+.page-number { font: 13px 'DM Mono', monospace; color: #6a6258; white-space: nowrap; }
+.page-number small { font-size: 9px; color: #a2957f; }
+
+.folio-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid #ddd5c7;
+}
+.folio-arrows { display: flex; gap: 10px; }
+.folio-arrows button {
+  width: 42px;
+  height: 32px;
+  border: 1px solid #c4bbab;
+  border-radius: 2px;
+  background: transparent;
+  color: #4b453d;
+  font-size: 14px;
+}
+.folio-arrows button:hover:not(:disabled) { background: #e8e2d6; }
+.folio-arrows button:disabled { opacity: .3; cursor: not-allowed; }
+.folio-dots { display: flex; flex-wrap: wrap; gap: 16px; }
+.folio-dots button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  background: transparent;
+  font: 8px 'DM Mono', monospace;
+  letter-spacing: .1em;
+  color: #9b9080;
+}
+.folio-dots button i { display: block; width: 18px; height: 2px; background: #cdc5b8; transition: background .3s; }
+.folio-dots button[aria-pressed=true] { color: #2d2823; }
+.folio-dots button[aria-pressed=true] i { background: #8a7a5c; }
+.folio-count { margin: 0; font: 13px 'DM Mono', monospace; color: #4b453d; }
+.folio-count span { color: #a2957f; font-size: 10px; }
+
+/* Landscapes — one column that keeps moving, with the list rendered twice so the
+   loop has no seam. Hovering or the button stops it. */
+.film-rule {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #cdc5b8;
+  font: 9px 'DM Mono', monospace;
+  letter-spacing: .14em;
+  color: #6a6258;
+}
+.film-rule button { background: transparent; font-size: 10px; color: #6b5c3d; padding: 4px 0; text-decoration: underline; text-underline-offset: 3px; }
+.film-window {
+  position: relative;
+  height: clamp(540px, 82vh, 880px);
+  margin-top: 18px;
+  overflow: hidden;
+  background: #ece7de;
+}
+.film-column { display: flex; flex-direction: column; animation: film-rise var(--film-duration, 60s) linear infinite; }
+.film-column[data-paused] { animation-play-state: paused; }
+@keyframes film-rise { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+.film-run { display: flex; flex-direction: column; align-items: center; gap: clamp(34px, 7vh, 84px); padding: 0 clamp(14px, 4vw, 70px) clamp(34px, 7vh, 84px); }
+.film-run figure { position: relative; width: 100%; margin: 0; }
+/* Upright frames sit narrow, wide ones run broad, and each frame leans to a different
+   side of the column, so the run never reads as one stacked strip. Nothing is cropped:
+   the photos keep their own proportions on the way past. */
+.film-run figure.is-tall { width: min(100%, 470px); }
+.film-run figure.is-wide { width: min(100%, 860px); }
+.film-run figure:nth-child(3n + 1) { align-self: flex-start; }
+.film-run figure:nth-child(3n) { align-self: flex-end; }
+.film-run button { display: block; width: 100%; padding: 0; border: 0; background: transparent; cursor: zoom-in; }
+.film-run button:focus-visible { outline: 2px solid #8a7a5c; outline-offset: -2px; }
+.film-run img { display: block; width: 100%; height: auto; }
+.film-run figcaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 9px 14px;
+  background: #f4f1eaee;
+  font: 8px 'DM Mono', monospace;
+  letter-spacing: .14em;
+  color: #4a443c;
+}
+.film-run figcaption small { font-size: 10px; color: #8a7a5c; }
+.film-side {
+  position: absolute;
+  right: 11px;
+  top: 28px;
+  writing-mode: vertical-rl;
+  font: italic 12px 'Playfair Display', serif;
+  letter-spacing: .16em;
+  color: #f4f1eacc;
+  text-shadow: 0 1px 5px #2b241a66;
+  pointer-events: none;
+}
+
+@media (max-width: 1000px) {
+  .photo-spread { padding: 60px clamp(22px, 7vw, 70px) 58px; }
+  .folio-page { min-height: clamp(470px, 72vh, 660px); gap: 22px; padding: 0; }
+  .page-plate { gap: 14px; }
+  .plate-solo { padding: 0 clamp(0px, 5vw, 60px); }
+  .page-foot { grid-template-columns: minmax(0, 1fr) auto; }
+  .page-number { grid-column: 2; }
+  .page-meta { grid-column: 1 / -1; order: 3; }
+}
+@media (max-width: 760px) {
+  .photo-spread { margin-inline: -24px; padding: 46px 24px 44px; }
+  .photo-chapter + .photo-chapter { margin-top: 52px; padding-top: 46px; }
+  .folio-page { min-height: 0; gap: 16px; }
+  /* One photo under the next at its own height — the 12 × 12 field is for wide screens. */
+  .page-plate { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-rows: auto; gap: 20px; padding: 0; }
+  .page-plate figure { grid-area: auto !important; }
+  .page-plate img { height: auto; }
+  .page-side { display: none; }
+  .page-note { font-size: 10px; }
+  .folio-controls { flex-wrap: wrap; gap: 12px; }
+  .folio-dots { order: 3; width: 100%; gap: 11px; }
+  .film-window { height: clamp(420px, 74vh, 620px); }
+  .film-run { gap: 26px; padding: 0 0 26px; }
+  .film-run figure:nth-child(3n + 1), .film-run figure:nth-child(3n) { align-self: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .film-column { animation: none; }
+  .film-window { overflow-y: auto; }
+}
+
+
+/* 影像 has no reading outline down the left, so the entry reclaims the 260px gutter
+   the other kinds leave for it. Compound class beats the single-class base rule. */
+.project-detail.kind-photography { padding-left: clamp(24px, 6vw, 120px); padding-right: clamp(24px, 6vw, 120px); }
+@media (max-width: 760px) {
+  .project-detail.kind-photography { padding-left: 24px; padding-right: 24px; }
+}

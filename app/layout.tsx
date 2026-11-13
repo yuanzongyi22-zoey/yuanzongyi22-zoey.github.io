@@ -1,5 +1,11 @@
+// Load order is load-bearing: atmosphere comes last so its type rules win over the
+// media-query rules in the earlier sheets at equal specificity.
 import '../src/portfolio-base.css'
 import '../src/portfolio-cases.css'
+import '../src/portfolio-contact.css'
+import '../src/portfolio-brief.css'
+import '../src/portfolio-photography.css'
+import '../src/portfolio-atmosphere.css'
 import type { Metadata, Viewport } from 'next'
 
 export const metadata: Metadata = {

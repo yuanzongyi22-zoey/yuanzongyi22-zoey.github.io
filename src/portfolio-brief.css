@@ -1,0 +1,69 @@
+/* The product-definition blocks for projects that have no scanned portfolio pages.
+   They sit on the light product spread, so everything here is the paper palette. */
+.jacket-coffee { background: linear-gradient(140deg, #e3c79c, #bd9263); color: #2e2220; }
+
+.product-source-brief { max-width: 1280px; margin: auto; padding-top: 4px; }
+.brief-block {
+  display: grid;
+  grid-template-columns: minmax(170px, .4fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  padding: 42px 0;
+  border-top: 1px solid #ded5c8;
+  scroll-margin-top: 90px;
+}
+.brief-block:first-child { border-top: 0; padding-top: 10px; }
+.brief-heading { position: sticky; top: 92px; align-self: start; }
+.brief-heading .section-index { color: #8c7e88; margin: 0 0 11px; }
+.brief-heading h3 { margin: 0; color: #241f2a; }
+.brief-body > p { font-size: 15px; line-height: 2; color: #3c3542; margin: 0 0 15px; max-width: 760px; }
+.brief-body > p:last-child { margin-bottom: 0; }
+
+.brief-points { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 18px; }
+.brief-points > li { border-left: 2px solid #c0a07a; padding: 2px 0 2px 16px; }
+.brief-points strong { display: block; font-size: 14px; font-weight: 500; color: #2c2633; margin-bottom: 8px; }
+.brief-points span { display: block; font-size: 13px; line-height: 1.95; color: #58505f; max-width: 700px; }
+.brief-note {
+  margin: 22px 0 0;
+  padding-top: 13px;
+  border-top: 1px dashed #d3c8ba;
+  font-size: 10px;
+  line-height: 1.85;
+  color: #8b7f93;
+}
+
+/* The journey board is reused from the rebuilt case study, straightened up and
+   given a lane per row so each stop can be read down as well as across. */
+.product-source-brief .journey-board {
+  margin-top: 26px;
+  transform: none;
+  overflow: visible;
+  border-color: #ded5c8;
+  box-shadow: 10px 14px 30px #6b54750f;
+}
+.product-source-brief .journey-board-header span { color: #8a5a2c; }
+.product-source-brief .journey-stop i { background: #8a5a2c; }
+.product-source-brief .journey-stop:nth-child(2n) i { background: #a98354; }
+.product-source-brief .journey-track:before { background: linear-gradient(90deg, #8a5a2c, #d4b285, #8a5a2c); }
+.journey-scroll { overflow-x: auto; scrollbar-width: thin; scrollbar-color: #cfc3b4 transparent; }
+.journey-lanes { display: grid; }
+.journey-lane { border-top: 1px solid #e4dbd0; padding: 15px 0 6px; }
+.journey-lane > p { display: flex; align-items: baseline; gap: 8px; margin: 0 0 11px; font-size: 12px; color: #4c4453; }
+.journey-lane > p small { font: 7px 'DM Mono', monospace; letter-spacing: .1em; color: #a294ad; }
+.journey-lane-cells { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+.journey-lane-cells > span { font-size: 10px; line-height: 1.8; color: #6b6075; padding-right: 8px; }
+.product-source-brief .service-actors { margin-top: 24px; border-top-color: #ded5c8; }
+.product-source-brief .service-actors b { color: #8a5a2c; }
+
+@media (max-width: 1000px) {
+  .brief-block { grid-template-columns: 1fr; gap: 18px; padding: 34px 0; }
+  .brief-heading { position: static; }
+  .journey-track, .journey-lane-cells { min-width: 680px; }
+}
+@media (max-width: 760px) {
+  .brief-body > p { font-size: 13px; line-height: 1.95; }
+  .brief-points span { font-size: 12px; }
+  .product-source-brief .journey-board { padding: 18px 14px; overflow: visible; }
+  .product-source-brief .service-actors { min-width: 0; gap: 6px; }
+  .product-source-brief .service-actors span { padding: 8px 9px; font-size: 9px; }
+  .product-source-brief .service-actors b { font-size: 9px; }
+}
